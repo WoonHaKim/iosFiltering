@@ -61,8 +61,11 @@ Mat image_copy;
     
     cvtColor(image, image_copy, CV_BGRA2GRAY); //흑백 1채널로 변환
     cvtColor(image, image_copy2, CV_BGRA2GRAY);
-    Canny(image_copy2,image_copy,200,200); //외곽선 따기
-    bitwise_not(image_copy, image_copy);
+
+    if (self.slider1.value>0 && self.slider2.value>0){
+        Canny(image_copy2,image_copy,self.slider1.value*400,self.slider2.value*400); //외곽선 따기
+    }
+    //bitwise_not(image_copy, image_copy);
     cvtColor(image_copy, image, CV_GRAY2BGRA);
     
     if (self.started) {
