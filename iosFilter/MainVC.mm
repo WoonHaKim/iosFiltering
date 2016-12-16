@@ -172,4 +172,10 @@ Mat image_copy;
     }
     return patientPhotoFolder;
 }
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if ([segue.identifier isEqualToString:@"settingsMenuModalSegue"]){
+        
+    }
+}
 @end
