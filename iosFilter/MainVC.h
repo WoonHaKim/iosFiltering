@@ -17,16 +17,26 @@
 #import <opencv2/core/core_c.h>
 using namespace cv;
 
-@interface MainVC : UIViewController <CvVideoCameraDelegate,AVCaptureVideoDataOutputSampleBufferDelegate>{
+@interface MainVC : UIViewController <CvVideoCameraDelegate, AVCaptureVideoDataOutputSampleBufferDelegate>{
     IBOutlet UIImageView *cameraView;
     CvVideoCamera* videoCamera;
-    
+
     cv::VideoWriter videoWriter;
 
 }
 
 @property (nonatomic, retain) CvVideoCamera *camera;
+@property (weak, nonatomic) IBOutlet UIButton *recBtn;
 
+
+@property (weak, nonatomic) IBOutlet UIButton *settingsBtn;
+
+
+@property (weak, nonatomic) IBOutlet UISlider *slider1;
+@property (weak, nonatomic) IBOutlet UISlider *slider2;
+
+
+@property (weak, nonatomic) IBOutlet UILabel *infoText1;
 
 
 @end

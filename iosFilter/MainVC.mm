@@ -6,17 +6,13 @@
 //  Copyright © 2016년 김운하. All rights reserved.
 //
 
-#import "MainVC.hpp"
+#import "MainVC.h"
 
 Mat image_copy;
 
 
 @interface MainVC ()
 
-
-
-@property (nonatomic, strong) AVCaptureSession *session;
-@property (nonatomic, strong) AVCaptureVideoPreviewLayer *previewLayer;
 
 @property (assign, nonatomic) BOOL started;
 
@@ -35,18 +31,21 @@ Mat image_copy;
     
     _camera.delegate = self;
     _camera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionBack; //장치 설정
-    _camera.defaultAVCaptureSessionPreset = AVCaptureSessionPreset640x480; //사이즈 설정
+    _camera.defaultAVCaptureSessionPreset = AVCaptureSessionPresetPhoto; //사이즈 설정
     _camera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortrait; //방향 설정
 
     _camera.rotateVideo = YES;
     _camera.defaultFPS = 30; // 프레임률 [camera start];
     
-    
+
 }
 
 - (void)viewDidLoad {
     videoCamera.recordVideo = YES;
+    self.started =NO;
+    self.infoText1.text=@"";
 
+    [self initRecBtn];
     
     [self initCamera];
     
@@ -79,27 +78,33 @@ Mat image_copy;
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-- (IBAction)stopVideo:(id)sender {
-    [self saveVideo];
+
+
+#pragma mark - Button Tapped
+
+- (IBAction)recBtnTapped:(id)sender {
+    if ( self.started ==NO){
+        [self startRecVideo];
+    }else{
+        [self stopRecVideo];
+    }
+    [self initRecBtn];
 }
 
-- (void)saveVideo{
-    NSString* relativePath = [videoCamera.videoFileURL relativePath];
-    UISaveVideoAtPathToSavedPhotosAlbum(relativePath, nil, NULL, NULL);
-    
-    
-    //Alert window
-    UIAlertView *alert = [UIAlertView alloc];
-    alert = [alert initWithTitle:@"Status"
-                         message:@"Saved to the Gallery!"
-                        delegate:nil
-               cancelButtonTitle:@"Continue"
-               otherButtonTitles:nil];
-    [alert show];
+- (void)initRecBtn{
+    if ( self.started ==NO){
+        [self.recBtn setImage:[UIImage imageNamed:@"rec_normal"] forState:UIControlStateNormal];
+        [self.recBtn setImage:[UIImage imageNamed:@"rec_pressed"] forState:UIControlStateFocused];
+
+    }else{
+        [self.recBtn setImage:[UIImage imageNamed:@"stop_normal"] forState:UIControlStateNormal];
+        [self.recBtn setImage:[UIImage imageNamed:@"stop_pressed"] forState:UIControlStateFocused];
+    }
 }
 
-#pragma mark - Action and Selector methods
-- (IBAction)startBtnTapped:(id)sender {
+#pragma mark - Record Video
+
+- (void)startRecVideo{
     NSString *filePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     filePath= [self pathToPatientPhotoFolder];
 
@@ -110,23 +115,24 @@ Mat image_copy;
     const char *filePathStr = [filePath UTF8String];
     NSLog(@"Path Initialized");
     videoWriter = VideoWriter(filePathStr, CV_FOURCC('M','P','4','V'), 30, image_copy.size(), true);
-   // videoWriter.open(filePathStr, CV_FOURCC('H','2','6','4'), 30, image_copy.size(), true);
+    // videoWriter.open(filePathStr, CV_FOURCC('H','2','6','4'), 30, image_copy.size(), true);
 
     // Also used RPZA, H264, MP4V.
     self.started = YES;
     NSLog(@"Video Capture Started");
-
 }
 
-- (IBAction)endBtnTapped:(id)sender {
+-(void)stopRecVideo{
     self.started = NO;
-    
+
     videoWriter.release();
-    
+
     NSString *filePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     filePath= [self pathToPatientPhotoFolder];
     filePath = [filePath stringByAppendingPathComponent:@"/output.mp4"];
     [self performSelector:@selector(UpdateVideoAndConfigureScreenForURL:) withObject:filePath afterDelay:0.2];
+
+
 
 }
 
@@ -138,6 +144,14 @@ Mat image_copy;
     else {
         NSLog(@"Not Compatible");
     }
+    //Alert window
+    UIAlertView *alert = [UIAlertView alloc];
+    alert = [alert initWithTitle:@"Status"
+                         message:@"Saved to the Gallery!"
+                        delegate:nil
+               cancelButtonTitle:@"Continue"
+               otherButtonTitles:nil];
+    [alert show];
 }
 
 - (NSString *)pathToPatientPhotoFolder {
