@@ -16,4 +16,6 @@
 
 @property (strong, nonatomic) NSArray* filterConfValue;
 
+- (instancetype)init;
+
 @end

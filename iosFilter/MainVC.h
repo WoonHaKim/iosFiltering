@@ -9,8 +9,11 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import <stdlib.h>
+#import "VideoFilterConf.h"
+#import "VideoFilterFunctions.h"
 
 
+//OpenCV
 #import <opencv2/opencv.hpp> 
 #import <opencv2/imgproc/imgproc_c.h> 
 #import <opencv2/videoio/cap_ios.h>
@@ -20,13 +23,14 @@ using namespace cv;
 @interface MainVC : UIViewController <CvVideoCameraDelegate, AVCaptureVideoDataOutputSampleBufferDelegate>{
     IBOutlet UIImageView *cameraView;
     CvVideoCamera* videoCamera;
-
+    
     cv::VideoWriter videoWriter;
 
 }
 
 @property (nonatomic, retain) CvVideoCamera *camera;
 @property (weak, nonatomic) IBOutlet UIButton *recBtn;
+@property (strong, nonatomic) VideoFilterConf *filterConf;
 
 
 @property (weak, nonatomic) IBOutlet UIButton *settingsBtn;

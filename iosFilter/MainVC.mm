@@ -10,11 +10,10 @@
 #import "Constants.h"
 
 #import "UtilFunctions.h"
-#import "VideoFilterConf.h"
 
 
-Mat image_copy;
 
+cv::Size image_size;
 
 @interface MainVC ()
 
@@ -64,7 +63,8 @@ Mat image_copy;
     videoCamera.recordVideo = YES;
     self.started =NO;
     self.infoText1.text=@"";
-
+    self.filterConf=[[VideoFilterConf alloc ]init];
+    
     [self initRecBtn];
     
     [self initCamera:CAMERA_POSITION_BACK];
@@ -90,31 +90,28 @@ Mat image_copy;
 
 
 
-- (void)setFilter:(VideoFilterConf *)filterMode{
-    
+- (void)setFilter:(VideoFilterConf *)filterConf{
+    self.filterConf=filterConf;
 }
 
 
 #pragma mark - openCV image Processing
 - (void)processImage:(Mat&)image; {
-    Mat image_copy2;
-    
-    cvtColor(image, image_copy, CV_BGRA2GRAY); //흑백 1채널로 변환
-    cvtColor(image, image_copy2, CV_BGRA2GRAY);
-
-    if (self.slider1.value>0 && self.slider2.value>0){
-        Canny(image_copy2,image_copy,self.slider1.value*400,self.slider2.value*400); //외곽선 따기
+    if (image_size.width<=0){
+        image_size=image.size();
     }
-    //bitwise_not(image_copy, image_copy);
-    cvtColor(image_copy, image, CV_GRAY2BGRA);
     
-    if (self.started) {
-
+    //[VideoFilterFunctions filterMonoChrome:image conf:self.filterConf];
+    [VideoFilterFunctions filterblur:image conf:self.filterConf];
+   // [VideoFilterFunctions filterCanny:image conf:self.filterConf];
+    
     dispatch_async(dispatch_get_main_queue(), ^{
-        videoWriter.write(image);
+
+        if (self.started==YES) {
+            videoWriter.write(image);
+        }
     });
 
-    }
 
     
 }
@@ -132,8 +129,9 @@ Mat image_copy;
         }else{
             [self stopRecVideo];
         }
-    });
     [self initRecBtn];
+    });
+
 }
 
 - (void)initRecBtn{
@@ -159,7 +157,7 @@ Mat image_copy;
     }
     const char *filePathStr = [filePath UTF8String];
     NSLog(@"Path Initialized");
-    videoWriter = VideoWriter(filePathStr, CV_FOURCC('H','2','6','4'), DEFAULT_FPS, image_copy.size(), true);
+    videoWriter = VideoWriter(filePathStr, CV_FOURCC('H','2','6','4'), DEFAULT_FPS, image_size, true);
     // videoWriter.open(filePathStr, CV_FOURCC('H','2','6','4'), 30, image_copy.size(), true);
 
     // Also used RPZA, H264, MP4V.
