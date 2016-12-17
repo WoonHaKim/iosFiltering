@@ -7,7 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @interface UtilFunctions : NSObject
 
+
++(UIAlertController *)getSimpleAlertVC:(NSString *)msgTitle msg:(NSString *)msg okMsg:(NSString *)okMsg;
 @end

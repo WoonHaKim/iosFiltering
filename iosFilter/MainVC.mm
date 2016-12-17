@@ -9,6 +9,8 @@
 #import "MainVC.h"
 #import "Constants.h"
 
+#import "UtilFunctions.h"
+
 Mat image_copy;
 
 
@@ -26,7 +28,7 @@ Mat image_copy;
 
 #pragma mark - Camera 세팅
 
--(void)initCamera:(NSInteger *)cameraPosition{
+-(void)initCamera:(NSInteger)cameraPosition{
     _camera = [[CvVideoCamera alloc] initWithParentView:cameraView];
     
     
@@ -59,7 +61,7 @@ Mat image_copy;
 
     [self initRecBtn];
     
-    [self initCamera];
+    [self initCamera:CAMERA_POSITION_BACK];
 
 
 
@@ -176,13 +178,11 @@ Mat image_copy;
         NSLog(@"Not Compatible");
     }
     //Alert window
-    UIAlertView *alert = [UIAlertView alloc];
-    alert = [alert initWithTitle:@"Status"
-                         message:@"Saved to the Gallery!"
-                        delegate:nil
-               cancelButtonTitle:@"Continue"
-               otherButtonTitles:nil];
-    [alert show];
+    
+    UIAlertController *alert=[UtilFunctions getSimpleAlertVC:@"Video Saved" msg:@"Video Saved in Photo-Gallury" okMsg:@"OK"];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+    
 }
 
 - (NSString *)pathToPatientPhotoFolder {

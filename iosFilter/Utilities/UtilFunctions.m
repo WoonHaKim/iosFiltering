@@ -10,4 +10,28 @@
 
 @implementation UtilFunctions
 
+
++(UIAlertController *)getSimpleAlertVC:(NSString *)msgTitle msg:(NSString *)msg okMsg:(NSString *)okMsg{
+    //Alert window
+    UIAlertController * alert=   [UIAlertController
+                                  alertControllerWithTitle:msgTitle
+                                  message:msg
+                                  preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction* ok = [UIAlertAction
+                         actionWithTitle:okMsg
+                         style:UIAlertActionStyleDefault
+                         handler:^(UIAlertAction * action)
+                         {
+                             [alert dismissViewControllerAnimated:YES completion:nil];
+                             
+                         }];
+
+    
+    [alert addAction:ok];
+
+    return alert;
+
+}
+
 @end
