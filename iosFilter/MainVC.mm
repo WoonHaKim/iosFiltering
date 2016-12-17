@@ -49,7 +49,7 @@ Mat image_copy;
         _camera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionFront;
 
     }
-    _camera.defaultAVCaptureSessionPreset = AVCaptureSessionPresetPhoto; //사이즈 설정
+    _camera.defaultAVCaptureSessionPreset = AVCaptureSessionPreset1280x720; //사이즈 설정
 
     _camera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortrait; //방향 설정
 
@@ -109,7 +109,11 @@ Mat image_copy;
     cvtColor(image_copy, image, CV_GRAY2BGRA);
     
     if (self.started) {
+
+    dispatch_async(dispatch_get_main_queue(), ^{
         videoWriter.write(image);
+    });
+
     }
 
     
@@ -122,11 +126,13 @@ Mat image_copy;
 #pragma mark - Button Tapped
 
 - (IBAction)recBtnTapped:(id)sender {
-    if ( self.started ==NO){
-        [self startRecVideo];
-    }else{
-        [self stopRecVideo];
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ( self.started ==NO){
+            [self startRecVideo];
+        }else{
+            [self stopRecVideo];
+        }
+    });
     [self initRecBtn];
 }
 
@@ -147,28 +153,29 @@ Mat image_copy;
     NSString *filePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     filePath= [self pathToPatientPhotoFolder];
 
-    filePath = [filePath stringByAppendingPathComponent:@"/output.mp4"];
+    filePath = [filePath stringByAppendingPathComponent:@"/output.mov"];
     if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
         [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
     }
     const char *filePathStr = [filePath UTF8String];
     NSLog(@"Path Initialized");
-    videoWriter = VideoWriter(filePathStr, CV_FOURCC('M','P','4','V'), DEFAULT_FPS, image_copy.size(), true);
+    videoWriter = VideoWriter(filePathStr, CV_FOURCC('H','2','6','4'), DEFAULT_FPS, image_copy.size(), true);
     // videoWriter.open(filePathStr, CV_FOURCC('H','2','6','4'), 30, image_copy.size(), true);
 
     // Also used RPZA, H264, MP4V.
     self.started = YES;
     NSLog(@"Video Capture Started");
+
 }
 
 -(void)stopRecVideo{
     self.started = NO;
 
     videoWriter.release();
-
+    
     NSString *filePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     filePath= [self pathToPatientPhotoFolder];
-    filePath = [filePath stringByAppendingPathComponent:@"/output.mp4"];
+    filePath = [filePath stringByAppendingPathComponent:@"/output.mov"];
     [self performSelector:@selector(UpdateVideoAndConfigureScreenForURL:) withObject:filePath afterDelay:0.2];
 
 
