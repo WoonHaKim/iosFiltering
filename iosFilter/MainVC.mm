@@ -36,7 +36,7 @@ Mat image_copy;
     _camera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortrait; //방향 설정
 
     _camera.rotateVideo = YES;
-    _camera.defaultFPS = 30; // 프레임률
+    _camera.defaultFPS = DEFAULT_FPS; // 프레임률
     [_camera start];
     
 
@@ -77,8 +77,8 @@ Mat image_copy;
 }
 
 
-
-- (void)processImage:(Mat&)image; { //여기서 opencv 작업을 함
+#pragma mark - openCV image Processing
+- (void)processImage:(Mat&)image; {
     Mat image_copy2;
     
     cvtColor(image, image_copy, CV_BGRA2GRAY); //흑백 1채널로 변환
@@ -99,10 +99,6 @@ Mat image_copy;
 
 
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 
 #pragma mark - Button Tapped
@@ -139,7 +135,7 @@ Mat image_copy;
     }
     const char *filePathStr = [filePath UTF8String];
     NSLog(@"Path Initialized");
-    videoWriter = VideoWriter(filePathStr, CV_FOURCC('M','P','4','V'), 30, image_copy.size(), true);
+    videoWriter = VideoWriter(filePathStr, CV_FOURCC('M','P','4','V'), DEFAULT_FPS, image_copy.size(), true);
     // videoWriter.open(filePathStr, CV_FOURCC('H','2','6','4'), 30, image_copy.size(), true);
 
     // Also used RPZA, H264, MP4V.
@@ -203,4 +199,12 @@ Mat image_copy;
         
     }
 }
+
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
 @end
