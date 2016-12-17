@@ -9,5 +9,11 @@
 #ifndef Constants_h
 #define Constants_h
 
+#define DEFAULT_FPS 30
+
+#define FILTER_NONE 900
+#define FILTER_MONOCHROME 901
+#define FILTER_BLUR 902
+#define FILTER_CANNY 903
 
 #endif /* Constants_h */

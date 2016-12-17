@@ -7,6 +7,7 @@
 //
 
 #import "MainVC.h"
+#import "Constants.h"
 
 Mat image_copy;
 
@@ -40,7 +41,7 @@ Mat image_copy;
     
 
 }
-
+#pragma mark - view cycle
 - (void)viewDidLoad {
     videoCamera.recordVideo = YES;
     self.started =NO;
@@ -49,11 +50,33 @@ Mat image_copy;
     [self initRecBtn];
     
     [self initCamera];
+
+
+
     
     [super viewDidLoad];
     
     
 }
+- (void)viewWillAppear:(BOOL)animated{
+    //화면 필터용 Observer 등록
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setFilter:) name:@"filterObserver" object:nil];
+    
+}
+
+- (void)viewWillDisappear:(BOOL)animated{
+    //사용 하지 않는 Observer 제거
+    [[NSNotificationCenter defaultCenter] removeObserver:self  name:@"filterObserver" object:nil];
+
+}
+
+
+
+- (void)setFilter:(NSDictionary *)filterMode{
+    
+}
+
+
 
 - (void)processImage:(Mat&)image; { //여기서 opencv 작업을 함
     Mat image_copy2;
