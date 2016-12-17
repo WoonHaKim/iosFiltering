@@ -37,13 +37,17 @@ Mat image_copy;
     _camera.delegate = self;
     
     if (cameraPosition==CAMERA_POSITION_FRONT){
-        _camera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionFront; //장치 설정
+        _camera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionFront;
 
     }else if (cameraPosition==CAMERA_POSITION_BACK ){
-        _camera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionBack; //장치 설정
+        _camera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionBack;
 
     }else{
+        UIAlertController *alert=[UtilFunctions getSimpleAlertVC:@"Camera" msg:@"Camera Configuration Error" okMsg:@"OK"];
         
+        [self presentViewController:alert animated:YES completion:nil];
+        _camera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionFront;
+
     }
     _camera.defaultAVCaptureSessionPreset = AVCaptureSessionPresetPhoto; //사이즈 설정
 
@@ -180,7 +184,7 @@ Mat image_copy;
         NSLog(@"Not Compatible");
     }
     
-    UIAlertController *alert=[UtilFunctions getSimpleAlertVC:@"Video Saved" msg:@"Video Saved in Photo-Gallury" okMsg:@"OK"];
+    UIAlertController *alert=[UtilFunctions getSimpleAlertVC:@"Video Saved" msg:@"Video Saved in Photo-gallery" okMsg:@"OK"];
     
     [self presentViewController:alert animated:YES completion:nil];
     
