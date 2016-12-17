@@ -10,7 +10,7 @@
 #import "Constants.h"
 
 #import "UtilFunctions.h"
-
+#import "ShareVC.h"
 
 
 cv::Size image_size;
@@ -19,6 +19,9 @@ cv::Size image_size;
 
 
 @property (assign, nonatomic) BOOL started;
+@property (assign, nonatomic) BOOL filterEdit;
+
+@property (assign, nonatomic) NSInteger filterNo;
 
 
 @end
@@ -64,12 +67,18 @@ cv::Size image_size;
     self.started =NO;
     self.infoText1.text=@"";
     self.filterConf=[[VideoFilterConf alloc ]init];
+    self.filterEdit=NO;
     
     [self initRecBtn];
     
     [self initCamera:CAMERA_POSITION_BACK];
 
+    self.slider1.hidden=YES;
+    self.slider2.hidden=YES;
 
+    [self.filterPickerView setTransform:CGAffineTransformMakeTranslation(self.view.frame.size.width, 0)];
+    filterList = [[NSArray alloc] initWithObjects:@"없음",@"흑백",@"흐림",@"윤곽선",nil];
+    self.filterPickerView.delegate=self;
 
     
     [super viewDidLoad];
@@ -100,9 +109,27 @@ cv::Size image_size;
     if (image_size.width<=0){
         image_size=image.size();
     }
-    
+    switch (self.filterNo) {
+        case 0:
+            
+            
+            break;
+        case 1:
+            
+            [VideoFilterFunctions filterMonoChrome:image conf:self.filterConf];
+            break;
+        case 2:
+            [VideoFilterFunctions filterblur:image conf:self.filterConf];
+            break;
+        case 3:
+            [VideoFilterFunctions filterCanny:image conf:self.filterConf];
+            break;
+        default:
+            break;
+    }
+
     //[VideoFilterFunctions filterMonoChrome:image conf:self.filterConf];
-    [VideoFilterFunctions filterblur:image conf:self.filterConf];
+ //   [VideoFilterFunctions filterblur:image conf:self.filterConf];
    // [VideoFilterFunctions filterCanny:image conf:self.filterConf];
     
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -144,6 +171,39 @@ cv::Size image_size;
         [self.recBtn setImage:[UIImage imageNamed:@"stop_pressed"] forState:UIControlStateFocused];
     }
 }
+- (IBAction)filterBtnTapped:(id)sender {
+    CGFloat origin=0;
+    NSString *btnTitle=@"";
+    if (self.filterEdit==NO){
+        origin=0;
+        self.filterEdit=YES;
+        btnTitle=@"OK";
+
+    }else{
+        origin=self.view.frame.size.width;
+        self.filterEdit=NO;
+        btnTitle=@"Filter";
+
+    }
+    [UIView animateWithDuration:0.2f
+                     animations:^{
+                         CGRect frame = self.filterPickerView.frame;
+                         frame.origin.x = origin;
+                         self.filterPickerView.frame = frame;
+                     }
+                     completion:^(BOOL finished){
+
+                     }
+     ];
+    
+
+
+}
+
+
+
+
+
 
 #pragma mark - Record Video
 
@@ -214,6 +274,27 @@ cv::Size image_size;
     return patientPhotoFolder;
 }
 
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView{
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *) pickerView numberOfRowsInComponent : (NSInteger)component{
+        return [filterList count];
+}
+
+// 피커를 사용하기 위해 반드시 사용되어야 할 필수 델리게이트이다.
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow: (NSInteger)row forComponent: (NSInteger)component{
+    
+    return [filterList objectAtIndex:row]; //0번째 컴퍼넌트의 선택된 문자열을 반환한다.
+    
+}
+
+-(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
+    self.filterNo=row;
+}
+
+
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if ([segue.identifier isEqualToString:@"settingsMenuModalSegue"]){
         
@@ -225,6 +306,8 @@ cv::Size image_size;
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
 
 
 @end

@@ -20,12 +20,13 @@
 #import <opencv2/core/core_c.h>
 using namespace cv;
 
-@interface MainVC : UIViewController <CvVideoCameraDelegate, AVCaptureVideoDataOutputSampleBufferDelegate>{
+@interface MainVC : UIViewController <CvVideoCameraDelegate, AVCaptureVideoDataOutputSampleBufferDelegate,UIPickerViewDelegate, UIPickerViewDataSource>{
     IBOutlet UIImageView *cameraView;
     CvVideoCamera* videoCamera;
     
     cv::VideoWriter videoWriter;
 
+    NSArray* filterList;
 }
 
 @property (nonatomic, retain) CvVideoCamera *camera;
@@ -39,6 +40,7 @@ using namespace cv;
 @property (weak, nonatomic) IBOutlet UISlider *slider1;
 @property (weak, nonatomic) IBOutlet UISlider *slider2;
 
+@property (weak, nonatomic) IBOutlet UIPickerView *filterPickerView;
 
 @property (weak, nonatomic) IBOutlet UILabel *infoText1;
 
