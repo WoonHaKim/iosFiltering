@@ -80,6 +80,7 @@
 		181EA5761E02C9C500FC2026 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		181EA5781E02C9CE00FC2026 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		181EA57A1E02C9D900FC2026 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		181EA5821E05083A00FC2026 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		1B5576C21E03CB31006A7C82 /* stop_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stop_pressed.png; sourceTree = "<group>"; };
 		1B5576C31E03CB31006A7C82 /* stop_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stop_normal.png; sourceTree = "<group>"; };
 		1B5576C41E03CB31006A7C82 /* rec_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rec_pressed.png; sourceTree = "<group>"; };
@@ -148,6 +149,7 @@
 		181EA5041E02BB7D00FC2026 /* iosFilter */ = {
 			isa = PBXGroup;
 			children = (
+				181EA5811E05082600FC2026 /* Utilities */,
 				1B5576C11E03CB24006A7C82 /* images */,
 				181EA57C1E02CBE600FC2026 /* Controller */,
 				181EA5081E02BB7F00FC2026 /* AppDelegate.h */,
@@ -215,6 +217,14 @@
 				1B8F25AD1E03C11100B3C206 /* ShareVC.m */,
 			);
 			name = Controller;
+			sourceTree = "<group>";
+		};
+		181EA5811E05082600FC2026 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				181EA5821E05083A00FC2026 /* Constants.h */,
+			);
+			name = Utilities;
 			sourceTree = "<group>";
 		};
 		1B5576C11E03CB24006A7C82 /* images */ = {

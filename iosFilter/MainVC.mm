@@ -35,7 +35,8 @@ Mat image_copy;
     _camera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortrait; //방향 설정
 
     _camera.rotateVideo = YES;
-    _camera.defaultFPS = 30; // 프레임률 [camera start];
+    _camera.defaultFPS = 30; // 프레임률
+    [_camera start];
     
 
 }
@@ -51,8 +52,6 @@ Mat image_copy;
     
     [super viewDidLoad];
     
-    [_camera start];
-
     
 }
 
