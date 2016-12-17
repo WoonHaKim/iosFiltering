@@ -10,6 +10,8 @@
 #import "Constants.h"
 
 #import "UtilFunctions.h"
+#import "VideoFilterConf.h"
+
 
 Mat image_copy;
 
@@ -84,7 +86,7 @@ Mat image_copy;
 
 
 
-- (void)setFilter:(NSDictionary *)filterMode{
+- (void)setFilter:(VideoFilterConf *)filterMode{
     
 }
 
@@ -177,7 +179,6 @@ Mat image_copy;
     else {
         NSLog(@"Not Compatible");
     }
-    //Alert window
     
     UIAlertController *alert=[UtilFunctions getSimpleAlertVC:@"Video Saved" msg:@"Video Saved in Photo-Gallury" okMsg:@"OK"];
     
