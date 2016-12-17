@@ -26,13 +26,23 @@ Mat image_copy;
 
 #pragma mark - Camera 세팅
 
--(void)initCamera{
+-(void)initCamera:(NSInteger *)cameraPosition{
     _camera = [[CvVideoCamera alloc] initWithParentView:cameraView];
     
     
     _camera.delegate = self;
-    _camera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionBack; //장치 설정
+    
+    if (cameraPosition==CAMERA_POSITION_FRONT){
+        _camera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionFront; //장치 설정
+
+    }else if (cameraPosition==CAMERA_POSITION_BACK ){
+        _camera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionBack; //장치 설정
+
+    }else{
+        
+    }
     _camera.defaultAVCaptureSessionPreset = AVCaptureSessionPresetPhoto; //사이즈 설정
+
     _camera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortrait; //방향 설정
 
     _camera.rotateVideo = YES;

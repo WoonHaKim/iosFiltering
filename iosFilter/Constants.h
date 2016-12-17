@@ -16,4 +16,8 @@
 #define FILTER_BLUR 902
 #define FILTER_CANNY 903
 
+
+#define CAMERA_POSITION_BACK 910
+#define CAMERA_POSITION_FRONT 911
+
 #endif /* Constants_h */
