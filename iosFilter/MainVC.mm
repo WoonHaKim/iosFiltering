@@ -234,7 +234,39 @@ cv::Size image_size;
     NSString *filePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     filePath= [self pathToPatientPhotoFolder];
     filePath = [filePath stringByAppendingPathComponent:@"/output.mov"];
-    [self performSelector:@selector(UpdateVideoAndConfigureScreenForURL:) withObject:filePath afterDelay:0.2];
+    
+    //Alert window
+    UIAlertController * choiceVC=   [UIAlertController
+                                  alertControllerWithTitle:@"녹화가 완료 되었습니다."
+                                  message:@"어떤 작업을 할지 선택해 주세요"
+                                  preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    UIAlertAction* actionSaveVideo = [UIAlertAction
+                         actionWithTitle:@"저장하기"
+                         style:UIAlertActionStyleDefault
+                         handler:^(UIAlertAction * action)
+                         {
+                             [self performSelector:@selector(UpdateVideoAndConfigureScreenForURL:) withObject:filePath afterDelay:0.1];
+                             [choiceVC dismissViewControllerAnimated:YES completion:nil];
+                             
+                         }];
+    UIAlertAction* actionShareVideo = [UIAlertAction
+                                      actionWithTitle:@"공유하기"
+                                      style:UIAlertActionStyleDefault
+                                      handler:^(UIAlertAction * action)
+                                      {
+                                          [self shareAction:@"Hello" param:@"aaa"];
+                                          [choiceVC dismissViewControllerAnimated:YES completion:nil];
+                                          
+                                      }];
+
+    
+    [choiceVC addAction:actionSaveVideo];
+    [choiceVC addAction:actionShareVideo];
+    
+    [self presentViewController:choiceVC animated:YES completion:nil];
+    
+    
 
 
 
@@ -272,6 +304,26 @@ cv::Size image_size;
         NSLog(@"Dir Created!!");
     }
     return patientPhotoFolder;
+}
+
+
+
+-(void)shareAction:(NSString *)str param:(NSString *)strTitle{
+    NSString *title = strTitle;
+    NSURL *url = [[NSURL alloc]initWithString:str];
+    NSMutableArray *postItems = [NSMutableArray new];
+    
+    [postItems addObject:title];
+    [postItems addObject:url];
+    UIActivityViewController *activityVC = [[UIActivityViewController alloc]
+                                            initWithActivityItems:postItems
+                                            applicationActivities:nil];
+    
+    activityVC.excludedActivityTypes = @[];
+    
+    [self presentViewController:activityVC animated:YES completion:nil];
+    
+    
 }
 
 
