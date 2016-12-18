@@ -10,34 +10,41 @@
 
 @implementation VideoFilterFunctions
 
-+(void)filterMonoChrome:(Mat &)input conf:(VideoFilterConf *)filterConf{
++(void)filterMonoChrome:(Mat &)input conf:(float)filterConf{
     Mat image_copy;
     cvtColor(input, image_copy, CV_BGRA2GRAY); //흑백 1채널로 변환
     cvtColor(image_copy, input, CV_GRAY2BGRA);
 
 }
 
-+(void)filterblur:(Mat &)input conf:(VideoFilterConf *)filterConf{
++(void)filterblur:(Mat &)input conf:(float)filterConf{
     Mat image_copy;
+    int dSize=FILTER_BLUR_DSIZE_MAX;
+    dSize=floor(filterConf*(float)FILTER_BLUR_DSIZE_MAX)+1;
+    
 
-    cv::blur(input, image_copy, cv::Size(23,23));
+    cv::blur(input, image_copy, cv::Size(dSize,dSize));
     image_copy.convertTo(input, CV_BGR2BGRA);
     
 }
 
-+(void)filterCanny:(Mat &)input conf:(VideoFilterConf *)filterConf{
++(void)filterCanny:(Mat &)input conf:(float)filterConf{
     Mat image_copy,image_copy2;
 
+    int dSize=FILTER_CANNY_DSIZE_MIN;
+    dSize=floor(filterConf*(float)FILTER_CANNY_DSIZE_MAX);
+    
+    
     cvtColor(input, image_copy, CV_BGRA2GRAY); //흑백 1채널로 변환
     cvtColor(input, image_copy2, CV_BGRA2GRAY);
 
-    Canny(image_copy2,image_copy,20,400); //외곽선 따기
+    Canny(image_copy2,image_copy,dSize,FILTER_CANNY_DSIZE_MAX); //외곽선 따기
     //bitwise_not(image_copy, image_copy);
     cvtColor(image_copy, input, CV_GRAY2BGRA);
 }
 
 
-+(void)filterProcess:(Mat &)input filterNo:(NSInteger)filterNo conf:(VideoFilterConf *)filterConf{
++(void)filterProcess:(Mat &)input filterNo:(NSInteger)filterNo conf:(float)filterConf{
     switch (filterNo) {
         case 0:
             break;

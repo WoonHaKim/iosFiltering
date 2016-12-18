@@ -17,8 +17,14 @@
 #define FILTER_CANNY 903
 
 
+#define FILTER_BLUR_DSIZE_MAX 32
+
+#define FILTER_CANNY_DSIZE_MIN 20
+#define FILTER_CANNY_DSIZE_MAX 500
+
 
 #define CAMERA_POSITION_BACK 910
 #define CAMERA_POSITION_FRONT 911
+
 
 #endif /* Constants_h */

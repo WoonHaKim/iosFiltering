@@ -25,13 +25,13 @@ using namespace cv;
     CvVideoCamera* videoCamera;
     
     cv::VideoWriter videoWriter;
-
+    float filterConf;
     NSArray* filterList;
 }
 
 @property (nonatomic, retain) CvVideoCamera *camera;
 @property (weak, nonatomic) IBOutlet UIButton *recBtn;
-@property (strong, nonatomic) VideoFilterConf *filterConf;
+
 
 @property (strong, nonatomic) NSTimer *countTimer;
 

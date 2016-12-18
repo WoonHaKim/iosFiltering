@@ -17,7 +17,7 @@
         NSLog(@"Initializing Filter Conf...");
         self.filterName=@"defaultFilter";
         self.filterName=@"filter Default";
-        self.filterConfValue=nil;
+        self.filterConfValue=[NSArray array];
     }
     return self;
 }

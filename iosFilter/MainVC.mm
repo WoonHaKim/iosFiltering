@@ -59,7 +59,7 @@ cv::Mat image_temp;
 
     }
     self.camera.defaultAVCaptureSessionPreset = AVCaptureSessionPresetPhoto; //사이즈 설정
-
+    
     self.camera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortrait; //방향 설정
 
     self.camera.rotateVideo = YES;
@@ -73,9 +73,11 @@ cv::Mat image_temp;
     videoCamera.recordVideo = YES;
     self.started =NO;
     self.infoText1.text=@"";
-    self.filterConf=[[VideoFilterConf alloc ]init];
+    filterConf=0;
     self.filterEdit=NO;
     self.filterNo=0;
+    
+    
     
     [self initRecBtn];
     
@@ -83,6 +85,7 @@ cv::Mat image_temp;
 
     self.slider1.hidden=YES;
     self.slider2.hidden=YES;
+    
 
     self.filterPickerView.hidden=YES;
     filterList = [[NSArray alloc] initWithObjects:@"없음",@"흑백",@"흐림",@"윤곽선",nil];
@@ -117,8 +120,8 @@ cv::Mat image_temp;
         image_size=image.size();
     }
 
-    
-    [VideoFilterFunctions filterProcess:image filterNo:self.filterNo conf:self.filterConf];
+    filterConf=self.slider1.value;
+    [VideoFilterFunctions filterProcess:image filterNo:self.filterNo conf:filterConf];
 
     
     
@@ -183,14 +186,12 @@ cv::Mat image_temp;
             btnTitle=@"Filter";
             
         }
-        if (self.filterNo==0){
+        if (self.filterNo==0 || self.filterNo==1){
 
             self.slider1.hidden=YES;
-            self.slider2.hidden=YES;
             
         }else{
             self.slider1.hidden=NO;
-            self.slider2.hidden=NO;
             
         }
 
@@ -374,13 +375,15 @@ cv::Mat image_temp;
 
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
     self.filterNo=row;
+    self.slider1.value=0;
+    self.slider2.value=0;
 }
 
 
 
 
-- (void)setFilter:(VideoFilterConf *)filterConf{
-    self.filterConf=filterConf;
+- (void)setFilter:(float)value{
+    filterConf=value;
 }
 
 #pragma mark - prepare for sague
