@@ -270,7 +270,7 @@ cv::Mat image_temp;
                                       style:UIAlertActionStyleDefault
                                       handler:^(UIAlertAction * action)
                                       {
-                                          [self shareAction:@"Hello" param:@"aaa"];
+                                          [self shareAction:@"Hello" title:@"This Video Is Shared Via TestApp" params:[NSMutableArray arrayWithObject:[NSURL fileURLWithPath:filePath isDirectory:NO]]];
                                           [choiceVC dismissViewControllerAnimated:YES completion:nil];
                                           
                                       }];
@@ -338,13 +338,15 @@ cv::Mat image_temp;
 #pragma mark - 공유기능
 
 
--(void)shareAction:(NSString *)str param:(NSString *)strTitle{
+-(void)shareAction:(NSString *)str title:(NSString *)strTitle params:(NSMutableArray *)paramItems{
     NSString *title = strTitle;
     NSURL *url = [[NSURL alloc]initWithString:str];
     NSMutableArray *postItems = [NSMutableArray new];
     
     [postItems addObject:title];
     [postItems addObject:url];
+    [postItems addObjectsFromArray:paramItems];
+    
     UIActivityViewController *activityVC = [[UIActivityViewController alloc]
                                             initWithActivityItems:postItems
                                             applicationActivities:nil];
