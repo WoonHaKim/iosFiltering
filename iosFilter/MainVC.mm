@@ -103,10 +103,6 @@ cv::Mat image_temp;
 
 
 
-- (void)setFilter:(VideoFilterConf *)filterConf{
-    self.filterConf=filterConf;
-}
-
 
 #pragma mark - openCV image Processing
 - (void)processImage:(Mat&)image; {
@@ -171,11 +167,11 @@ cv::Mat image_temp;
 - (void)initRecBtn{
     if ( self.started ==NO){
         [self.recBtn setImage:[UIImage imageNamed:@"rec_normal"] forState:UIControlStateNormal];
-        [self.recBtn setImage:[UIImage imageNamed:@"rec_pressed"] forState:UIControlStateFocused];
+        [self.recBtn setImage:[UIImage imageNamed:@"rec_pressed"] forState:UIControlStateHighlighted];
 
     }else{
         [self.recBtn setImage:[UIImage imageNamed:@"stop_normal"] forState:UIControlStateNormal];
-        [self.recBtn setImage:[UIImage imageNamed:@"stop_pressed"] forState:UIControlStateFocused];
+        [self.recBtn setImage:[UIImage imageNamed:@"stop_pressed"] forState:UIControlStateHighlighted];
     }
 }
 - (IBAction)filterBtnTapped:(id)sender {
@@ -339,6 +335,7 @@ cv::Mat image_temp;
     return patientPhotoFolder;
 }
 
+#pragma mark - 공유기능
 
 
 -(void)shareAction:(NSString *)str param:(NSString *)strTitle{
@@ -359,6 +356,7 @@ cv::Mat image_temp;
     
 }
 
+#pragma mark - Filter 선택용 PickerView
 
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView{
     return 1;
@@ -380,12 +378,21 @@ cv::Mat image_temp;
 }
 
 
+
+
+- (void)setFilter:(VideoFilterConf *)filterConf{
+    self.filterConf=filterConf;
+}
+
+#pragma mark - prepare for sague
+
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if ([segue.identifier isEqualToString:@"settingsMenuModalSegue"]){
         
     }
 }
 
+#pragma mark - 메모리 관리
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
