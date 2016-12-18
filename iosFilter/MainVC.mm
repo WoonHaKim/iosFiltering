@@ -268,7 +268,7 @@ cv::Mat image_temp;
                                       style:UIAlertActionStyleDefault
                                       handler:^(UIAlertAction * action)
                                       {
-                                          [self shareAction:@"Hello" title:@"This Video Is Shared Via TestApp" params:[NSMutableArray arrayWithObject:[NSURL fileURLWithPath:filePath isDirectory:NO]]];
+                                          [self shareAction:@"Hello" title:@"이 비디오는 테스트 앱에서 생성 되었습니다." params:[NSMutableArray arrayWithObject:[NSURL fileURLWithPath:filePath isDirectory:NO]]];
                                           [choiceVC dismissViewControllerAnimated:YES completion:nil];
                                           
                                       }];
@@ -298,7 +298,7 @@ cv::Mat image_temp;
         NSLog(@"Compatible");
         UISaveVideoAtPathToSavedPhotosAlbum(filePath, nil, nil, nil);
         
-        UIAlertController *alert=[UtilFunctions getSimpleAlertVC:@"Video Saved" msg:@"Video Saved in Photo-gallery"];
+        UIAlertController *alert=[UtilFunctions getSimpleAlertVC:@"저장 완료" msg:@"사진에 저장되었습니다."];
         
         [self presentViewController:alert animated:YES completion:nil];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
