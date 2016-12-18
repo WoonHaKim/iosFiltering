@@ -37,6 +37,8 @@ using namespace cv;
 
 @property (weak, nonatomic) IBOutlet UIButton *settingsBtn;
 
+@property (weak, nonatomic) IBOutlet UISegmentedControl *cameraSelect;
+
 
 @property (weak, nonatomic) IBOutlet UISlider *slider1;
 @property (weak, nonatomic) IBOutlet UISlider *slider2;

@@ -437,5 +437,29 @@ cv::Mat image_temp;
     [self updateTimer];
 }
 
+#pragma mark - 전후면 카메라 선택
+
+- (IBAction)cameraSelChange:(UISegmentedControl *)sender {
+    if(self.started==YES){
+        self.started=NO;
+        videoWriter.release();
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self initRecBtn];
+    });
+    
+    [self.camera stop];
+    image_size.width=-1;
+    if (sender.selectedSegmentIndex==0){
+        [self initCamera:CAMERA_POSITION_BACK];
+    }else{
+        
+        [self initCamera:CAMERA_POSITION_FRONT];
+
+    }
+}
+
+
+
 
 @end

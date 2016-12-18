@@ -74,7 +74,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="itY-Ds-2Kc">
-                                <rect key="frame" x="334" y="698.66666666666663" width="60" height="0.0"/>
+                                <rect key="frame" x="334" y="698" width="60" height="0.0"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="60" id="8mH-ey-mtf"/>
                                 </constraints>
@@ -82,6 +82,19 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="XZc-J9-Ncw">
+                                <rect key="frame" x="20" y="35" width="121" height="29"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="121" id="Olk-eJ-ER9"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="후면"/>
+                                    <segment title="전면"/>
+                                </segments>
+                                <connections>
+                                    <action selector="cameraSelChange:" destination="BYZ-38-t0r" eventType="valueChanged" id="3wO-45-leT"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -99,6 +112,7 @@
                             <constraint firstAttribute="trailingMargin" secondItem="ogY-ya-yst" secondAttribute="trailing" id="deG-Jn-Y4g"/>
                             <constraint firstAttribute="leadingMargin" secondItem="ogY-ya-yst" secondAttribute="leading" id="e3Z-TK-x31"/>
                             <constraint firstItem="Trt-fH-gfj" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="e7o-5Z-Lii"/>
+                            <constraint firstItem="XZc-J9-Ncw" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="15" id="fTD-Lo-brS"/>
                             <constraint firstAttribute="trailingMargin" secondItem="l7O-mr-520" secondAttribute="trailing" constant="-20" id="fbj-BA-H86"/>
                             <constraint firstItem="7kI-Xd-h5w" firstAttribute="top" secondItem="l7O-mr-520" secondAttribute="bottom" id="fjN-fC-p8Z"/>
                             <constraint firstItem="7kI-Xd-h5w" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="fu1-3V-rWu"/>
@@ -106,6 +120,7 @@
                             <constraint firstItem="BfW-KB-Ewp" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="iB2-Iv-teI"/>
                             <constraint firstItem="ogY-ya-yst" firstAttribute="top" secondItem="a2F-cF-z54" secondAttribute="bottom" constant="6" id="kfA-dm-SX9"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Trt-fH-gfj" secondAttribute="bottom" constant="8" id="lNy-YJ-9Tf"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="XZc-J9-Ncw" secondAttribute="leading" id="qy8-8o-3fG"/>
                             <constraint firstItem="l7O-mr-520" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="w4j-cj-l5Y"/>
                             <constraint firstAttribute="leadingMargin" secondItem="WaC-cP-DPd" secondAttribute="leading" id="x10-Rz-lEZ"/>
                             <constraint firstItem="Trt-fH-gfj" firstAttribute="top" secondItem="ogY-ya-yst" secondAttribute="bottom" constant="9" id="zKq-27-a5K"/>
@@ -118,6 +133,7 @@
                         </variation>
                     </view>
                     <connections>
+                        <outlet property="cameraSelect" destination="XZc-J9-Ncw" id="rTC-5e-396"/>
                         <outlet property="cameraView" destination="l7O-mr-520" id="8NI-9g-XiA"/>
                         <outlet property="filterPickerView" destination="7kI-Xd-h5w" id="kDg-mR-wHp"/>
                         <outlet property="infoText1" destination="BfW-KB-Ewp" id="NLx-B5-Gny"/>
