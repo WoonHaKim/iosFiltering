@@ -118,22 +118,7 @@ cv::Mat image_temp;
     }
 
     
-    switch (self.filterNo) {
-        case 0:
-            break;
-        case 1:
-            
-            [VideoFilterFunctions filterMonoChrome:image conf:self.filterConf];
-            break;
-        case 2:
-            [VideoFilterFunctions filterblur:image conf:self.filterConf];
-            break;
-        case 3:
-            [VideoFilterFunctions filterCanny:image conf:self.filterConf];
-            break;
-        default:
-            break;
-    }
+    [VideoFilterFunctions filterProcess:image filterNo:self.filterNo conf:self.filterConf];
 
     
     
@@ -350,9 +335,9 @@ cv::Mat image_temp;
 #pragma mark - 공유기능
 
 
--(void)shareAction:(NSString *)str title:(NSString *)strTitle params:(NSMutableArray *)paramItems{
+-(void)shareAction:(NSString *)urlStr title:(NSString *)strTitle params:(NSMutableArray *)paramItems{
     NSString *title = strTitle;
-    NSURL *url = [[NSURL alloc]initWithString:str];
+    NSURL *url = [[NSURL alloc]initWithString:urlStr];
     NSMutableArray *postItems = [NSMutableArray new];
     
     [postItems addObject:title];
