@@ -134,12 +134,17 @@ cv::Mat image_temp;
 
     
     
+    dispatch_async(dispatch_get_main_queue(), ^{
 
-    if (self.started==YES && videoWriter.isOpened()) {
-        cv::cvtColor(image, image_temp, CV_BGRA2RGBA);
-
-        videoWriter.write(image_temp);
-    }
+        if (self.started==YES && videoWriter.isOpened()) {
+            cv::cvtColor(image, image_temp, CV_BGRA2RGBA);
+            try {
+                videoWriter.write(image_temp);
+            } catch (Exception) {
+                NSLog(@"Error Occured When Saving Frame");
+            }
+        }
+    });
 
     
     
@@ -219,7 +224,7 @@ cv::Mat image_temp;
     }
     const char *filePathStr = [filePath UTF8String];
     NSLog(@"Path Initialized");
-    videoWriter = VideoWriter(filePathStr, CV_FOURCC('H','2','6','4'), DEFAULT_FPS, image_size, true);
+    videoWriter = VideoWriter(filePathStr, CV_FOURCC('F','F','V','1'), DEFAULT_FPS, image_size, true);
     // videoWriter.open(filePathStr, CV_FOURCC('H','2','6','4'), 30, image_copy.size(), true);
 
     // Also used RPZA, H264, MP4V.
