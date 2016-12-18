@@ -14,6 +14,7 @@
 #import "ShareVC.h"
 
 
+
 cv::Size image_size;
 cv::Mat image_temp;
 
@@ -25,6 +26,9 @@ cv::Mat image_temp;
 @property (assign, nonatomic) BOOL filterEdit;
 
 @property (assign, nonatomic) NSInteger filterNo;
+
+@property (assign, nonatomic) NSInteger recSec;
+@property (assign, nonatomic) NSInteger recMin;
 
 
 @end
@@ -80,9 +84,12 @@ cv::Mat image_temp;
     self.slider1.hidden=YES;
     self.slider2.hidden=YES;
 
-    [self.filterPickerView setTransform:CGAffineTransformMakeTranslation(self.view.frame.size.width, 0)];
+    self.filterPickerView.hidden=YES;
     filterList = [[NSArray alloc] initWithObjects:@"없음",@"흑백",@"흐림",@"윤곽선",nil];
     self.filterPickerView.delegate=self;
+
+    
+    
 
     
     [super viewDidLoad];
@@ -175,32 +182,35 @@ cv::Mat image_temp;
     }
 }
 - (IBAction)filterBtnTapped:(id)sender {
-    CGFloat origin=0;
-    NSString *btnTitle=@"";
-    if (self.filterEdit==NO){
-        origin=0;
-        self.filterEdit=YES;
-        btnTitle=@"OK";
+    dispatch_async(dispatch_get_main_queue(), ^{
 
-    }else{
-        origin=self.view.frame.size.width;
-        self.filterEdit=NO;
-        btnTitle=@"Filter";
+        NSString *btnTitle=@"";
+        if (self.filterEdit==NO){
+            self.filterEdit=YES;
+            self.filterPickerView.hidden=YES;
+            btnTitle=@"OK";
+            
 
-    }
-    [UIView animateWithDuration:0.2f
-                     animations:^{
-                         CGRect frame = self.filterPickerView.frame;
-                         frame.origin.x = origin;
-                         self.filterPickerView.frame = frame;
-                     }
-                     completion:^(BOOL finished){
+        }else{
+            self.filterEdit=NO;
+            self.filterPickerView.hidden=NO;
 
-                     }
-     ];
-    
+            btnTitle=@"Filter";
+            
+        }
+        if (self.filterNo==0){
 
+            self.slider1.hidden=YES;
+            self.slider2.hidden=YES;
+            
+        }else{
+            self.slider1.hidden=NO;
+            self.slider2.hidden=NO;
+            
+        }
 
+        
+    });
 }
 
 
@@ -223,6 +233,7 @@ cv::Mat image_temp;
     videoWriter = VideoWriter(filePathStr, CV_FOURCC('F','F','V','1'), DEFAULT_FPS, image_size, true);
     // videoWriter.open(filePathStr, CV_FOURCC('H','2','6','4'), 30, image_copy.size(), true);
 
+    [self initTimer];
     // Also used RPZA, H264, MP4V.
     self.started = YES;
     NSLog(@"Video Capture Started");
@@ -238,6 +249,7 @@ cv::Mat image_temp;
     filePath= [self pathToPatientPhotoFolder];
     filePath = [filePath stringByAppendingPathComponent:@"/output.mov"];
     
+    [self stopTimer];
     
     UIDevice *device = [UIDevice currentDevice];
     NSString *devType=device.model;
@@ -401,7 +413,41 @@ cv::Mat image_temp;
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - timer
 
+- (void)initTimer{
+    self.recSec=0;
+    self.recMin=0;
+
+    self.countTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateTimer) userInfo:[[NSDictionary alloc]initWithObjects:@[@"timerID"] forKeys:@[@"t00001"]] repeats:YES];
+    NSRunLoop *theRunLoop = [NSRunLoop currentRunLoop];
+    [theRunLoop addTimer:self.countTimer forMode:NSDefaultRunLoopMode];
+}
+
+- (void)updateTimer{
+    if (self.countTimer.isValid){
+        self.recSec++;
+        if(self.recSec==60){
+            self.recMin++;
+            self.recSec=0;
+
+        }
+
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
+        self.infoText2.text=[NSString stringWithFormat:@"%ld:%ld",(long)self.recMin,(long)self.recSec];
+    });
+}
+
+- (void)stopTimer{
+    [self.countTimer invalidate];
+
+    self.recSec=0;
+    self.recMin=0;
+    
+    [self updateTimer];
+}
 
 
 @end

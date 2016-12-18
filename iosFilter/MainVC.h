@@ -33,6 +33,7 @@ using namespace cv;
 @property (weak, nonatomic) IBOutlet UIButton *recBtn;
 @property (strong, nonatomic) VideoFilterConf *filterConf;
 
+@property (strong, nonatomic) NSTimer *countTimer;
 
 @property (weak, nonatomic) IBOutlet UIButton *settingsBtn;
 
@@ -43,6 +44,7 @@ using namespace cv;
 @property (weak, nonatomic) IBOutlet UIPickerView *filterPickerView;
 
 @property (weak, nonatomic) IBOutlet UILabel *infoText1;
+@property (weak, nonatomic) IBOutlet UILabel *infoText2;
 
 
 @end

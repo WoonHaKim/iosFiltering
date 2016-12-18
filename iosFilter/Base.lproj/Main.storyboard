@@ -73,6 +73,15 @@
                                     <action selector="filterBtnTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="QJN-xh-XOp"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="itY-Ds-2Kc">
+                                <rect key="frame" x="334" y="698.66666666666663" width="60" height="0.0"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="60" id="8mH-ey-mtf"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -82,8 +91,10 @@
                             <constraint firstItem="a2F-cF-z54" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="KNS-P8-nAj"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="l7O-mr-520" secondAttribute="bottom" constant="148" id="MvL-fa-dhr"/>
                             <constraint firstItem="l7O-mr-520" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="-20" id="N5y-iA-1Ie"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="itY-Ds-2Kc" secondAttribute="trailing" id="UAa-Qf-rqc"/>
                             <constraint firstItem="7kI-Xd-h5w" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="Vpr-MN-DlT"/>
                             <constraint firstItem="WaC-cP-DPd" firstAttribute="centerY" secondItem="Trt-fH-gfj" secondAttribute="centerY" id="XCI-2J-eua"/>
+                            <constraint firstItem="itY-Ds-2Kc" firstAttribute="centerY" secondItem="Trt-fH-gfj" secondAttribute="centerY" id="a7E-yD-iHq"/>
                             <constraint firstItem="Trt-fH-gfj" firstAttribute="top" secondItem="l7O-mr-520" secondAttribute="bottom" constant="80" id="dDy-6g-gYz"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ogY-ya-yst" secondAttribute="trailing" id="deG-Jn-Y4g"/>
                             <constraint firstAttribute="leadingMargin" secondItem="ogY-ya-yst" secondAttribute="leading" id="e3Z-TK-x31"/>
@@ -110,6 +121,7 @@
                         <outlet property="cameraView" destination="l7O-mr-520" id="8NI-9g-XiA"/>
                         <outlet property="filterPickerView" destination="7kI-Xd-h5w" id="kDg-mR-wHp"/>
                         <outlet property="infoText1" destination="BfW-KB-Ewp" id="NLx-B5-Gny"/>
+                        <outlet property="infoText2" destination="itY-Ds-2Kc" id="5Jp-PO-YxE"/>
                         <outlet property="recBtn" destination="Trt-fH-gfj" id="Uom-Jr-wmg"/>
                         <outlet property="settingsBtn" destination="WaC-cP-DPd" id="lpv-OW-1cO"/>
                         <outlet property="slider1" destination="a2F-cF-z54" id="Onp-Kp-aiW"/>
