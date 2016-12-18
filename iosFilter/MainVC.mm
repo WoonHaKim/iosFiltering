@@ -15,6 +15,8 @@
 
 
 cv::Size image_size;
+cv::Mat image_temp;
+
 
 @interface MainVC ()
 
@@ -52,12 +54,12 @@ cv::Size image_size;
         self.camera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionFront;
 
     }
-    self.camera.defaultAVCaptureSessionPreset = AVCaptureSessionPreset1280x720; //사이즈 설정
+    self.camera.defaultAVCaptureSessionPreset = AVCaptureSessionPresetPhoto; //사이즈 설정
 
     self.camera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortrait; //방향 설정
 
     self.camera.rotateVideo = YES;
-    [self.camera setDefaultFPS: DEFAULT_FPS]; // 프레임률
+    self.camera.defaultFPS=DEFAULT_FPS; // 프레임률
     [self.camera start];
     
 
@@ -69,6 +71,7 @@ cv::Size image_size;
     self.infoText1.text=@"";
     self.filterConf=[[VideoFilterConf alloc ]init];
     self.filterEdit=NO;
+    self.filterNo=0;
     
     [self initRecBtn];
     
@@ -107,43 +110,38 @@ cv::Size image_size;
 
 #pragma mark - openCV image Processing
 - (void)processImage:(Mat&)image; {
-    Mat image_temp=image.clone();
     if (image_size.width<=0){
         image_size=image.size();
     }
-    
 
     
-        
     switch (self.filterNo) {
         case 0:
-            image=image_temp;
             break;
         case 1:
             
-            [VideoFilterFunctions filterMonoChrome:image_temp conf:self.filterConf];
+            [VideoFilterFunctions filterMonoChrome:image conf:self.filterConf];
             break;
         case 2:
-            [VideoFilterFunctions filterblur:image_temp conf:self.filterConf];
+            [VideoFilterFunctions filterblur:image conf:self.filterConf];
             break;
         case 3:
-            [VideoFilterFunctions filterCanny:image_temp conf:self.filterConf];
+            [VideoFilterFunctions filterCanny:image conf:self.filterConf];
             break;
         default:
-            image=image_temp;
-
             break;
     }
 
     
     
 
-        if (self.started==YES && videoWriter.isOpened()) {
-            videoWriter.write(image_temp);
-        }
+    if (self.started==YES && videoWriter.isOpened()) {
+        cv::cvtColor(image, image_temp, CV_BGRA2RGBA);
+
+        videoWriter.write(image_temp);
+    }
 
     
-    image=image_temp;
     
 }
 
@@ -215,13 +213,13 @@ cv::Size image_size;
     NSString *filePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     filePath= [self pathToPatientPhotoFolder];
 
-    filePath = [filePath stringByAppendingPathComponent:@"/output.mp4"];
+    filePath = [filePath stringByAppendingPathComponent:@"/output.mov"];
     if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
         [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
     }
     const char *filePathStr = [filePath UTF8String];
     NSLog(@"Path Initialized");
-    videoWriter = VideoWriter(filePathStr, CV_FOURCC('M','P','4','V'), DEFAULT_FPS, image_size, true);
+    videoWriter = VideoWriter(filePathStr, CV_FOURCC('H','2','6','4'), DEFAULT_FPS, image_size, true);
     // videoWriter.open(filePathStr, CV_FOURCC('H','2','6','4'), 30, image_copy.size(), true);
 
     // Also used RPZA, H264, MP4V.
@@ -234,10 +232,10 @@ cv::Size image_size;
     self.started = NO;
 
     videoWriter.release();
-    
+
     NSString *filePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     filePath= [self pathToPatientPhotoFolder];
-    filePath = [filePath stringByAppendingPathComponent:@"/output.mp4"];
+    filePath = [filePath stringByAppendingPathComponent:@"/output.mov"];
     
     
     UIDevice *device = [UIDevice currentDevice];
@@ -262,7 +260,7 @@ cv::Size image_size;
                          style:UIAlertActionStyleDefault
                          handler:^(UIAlertAction * action)
                          {
-                             [self performSelector:@selector(UpdateVideoAndConfigureScreenForURL:) withObject:filePath afterDelay:0.1];
+                             [self performSelector:@selector(UpdateVideoAndConfigureScreenForURL:) withObject:filePath afterDelay:0.2];
                              [choiceVC dismissViewControllerAnimated:YES completion:nil];
                              
                          }];
@@ -275,11 +273,19 @@ cv::Size image_size;
                                           [choiceVC dismissViewControllerAnimated:YES completion:nil];
                                           
                                       }];
-
+    UIAlertAction* actionCancelVideo = [UIAlertAction
+                                      actionWithTitle:@"취소"
+                                      style:UIAlertActionStyleDefault
+                                      handler:^(UIAlertAction * action)
+                                      {
+                                          [choiceVC dismissViewControllerAnimated:YES completion:nil];
+                                          
+                                      }];
     
     [choiceVC addAction:actionSaveVideo];
     [choiceVC addAction:actionShareVideo];
-    
+    [choiceVC addAction:actionCancelVideo];
+
     [self presentViewController:choiceVC animated:YES completion:nil];
     
     
@@ -292,17 +298,19 @@ cv::Size image_size;
     if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(filePath)) {
         NSLog(@"Compatible");
         UISaveVideoAtPathToSavedPhotosAlbum(filePath, nil, nil, nil);
+        
+        UIAlertController *alert=[UtilFunctions getSimpleAlertVC:@"Video Saved" msg:@"Video Saved in Photo-gallery"];
+        
+        [self presentViewController:alert animated:YES completion:nil];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [alert dismissViewControllerAnimated:YES completion:nil];
+        });
+
     }
     else {
         NSLog(@"Not Compatible");
     }
     
-    UIAlertController *alert=[UtilFunctions getSimpleAlertVC:@"Video Saved" msg:@"Video Saved in Photo-gallery"];
-    
-    [self presentViewController:alert animated:YES completion:nil];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [alert dismissViewControllerAnimated:YES completion:nil];
-    });
 
     
 }

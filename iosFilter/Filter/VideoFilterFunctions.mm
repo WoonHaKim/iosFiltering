@@ -19,7 +19,7 @@
 
 +(void)filterblur:(Mat &)input conf:(VideoFilterConf *)conf{
     Mat image_copy;
-    cv::blur(input, image_copy, cv::Size(13,13));
+    cv::blur(input, image_copy, cv::Size(23,23));
     image_copy.convertTo(input, CV_BGR2BGRA);
     
 }
