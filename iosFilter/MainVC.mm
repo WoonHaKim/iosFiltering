@@ -6,6 +6,7 @@
 //  Copyright © 2016년 김운하. All rights reserved.
 //
 
+
 #import "MainVC.h"
 #import "Constants.h"
 
@@ -33,31 +34,31 @@ cv::Size image_size;
 #pragma mark - Camera 세팅
 
 -(void)initCamera:(NSInteger)cameraPosition{
-    _camera = [[CvVideoCamera alloc] initWithParentView:cameraView];
+    self.camera = [[CvVideoCamera alloc] initWithParentView:cameraView];
     
     
-    _camera.delegate = self;
+    self.camera.delegate = self;
     
     if (cameraPosition==CAMERA_POSITION_FRONT){
-        _camera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionFront;
+        self.camera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionFront;
 
     }else if (cameraPosition==CAMERA_POSITION_BACK ){
-        _camera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionBack;
+        self.camera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionBack;
 
     }else{
         UIAlertController *alert=[UtilFunctions getSimpleAlertVC:@"Camera" msg:@"Camera Configuration Error" okMsg:@"OK"];
         
         [self presentViewController:alert animated:YES completion:nil];
-        _camera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionFront;
+        self.camera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionFront;
 
     }
-    _camera.defaultAVCaptureSessionPreset = AVCaptureSessionPreset1280x720; //사이즈 설정
+    self.camera.defaultAVCaptureSessionPreset = AVCaptureSessionPreset1280x720; //사이즈 설정
 
-    _camera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortrait; //방향 설정
+    self.camera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortrait; //방향 설정
 
-    _camera.rotateVideo = YES;
-    _camera.defaultFPS = DEFAULT_FPS; // 프레임률
-    [_camera start];
+    self.camera.rotateVideo = YES;
+    [self.camera setDefaultFPS: DEFAULT_FPS]; // 프레임률
+    [self.camera start];
     
 
 }
@@ -106,40 +107,43 @@ cv::Size image_size;
 
 #pragma mark - openCV image Processing
 - (void)processImage:(Mat&)image; {
+    Mat image_temp=image.clone();
     if (image_size.width<=0){
         image_size=image.size();
     }
+    
+
+    
+        
     switch (self.filterNo) {
         case 0:
-            
-            
+            image=image_temp;
             break;
         case 1:
             
-            [VideoFilterFunctions filterMonoChrome:image conf:self.filterConf];
+            [VideoFilterFunctions filterMonoChrome:image_temp conf:self.filterConf];
             break;
         case 2:
-            [VideoFilterFunctions filterblur:image conf:self.filterConf];
+            [VideoFilterFunctions filterblur:image_temp conf:self.filterConf];
             break;
         case 3:
-            [VideoFilterFunctions filterCanny:image conf:self.filterConf];
+            [VideoFilterFunctions filterCanny:image_temp conf:self.filterConf];
             break;
         default:
+            image=image_temp;
+
             break;
     }
 
-    //[VideoFilterFunctions filterMonoChrome:image conf:self.filterConf];
- //   [VideoFilterFunctions filterblur:image conf:self.filterConf];
-   // [VideoFilterFunctions filterCanny:image conf:self.filterConf];
     
-    dispatch_async(dispatch_get_main_queue(), ^{
+    
 
-        if (self.started==YES) {
-            videoWriter.write(image);
+        if (self.started==YES && videoWriter.isOpened()) {
+            videoWriter.write(image_temp);
         }
-    });
 
-
+    
+    image=image_temp;
     
 }
 
@@ -211,13 +215,13 @@ cv::Size image_size;
     NSString *filePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     filePath= [self pathToPatientPhotoFolder];
 
-    filePath = [filePath stringByAppendingPathComponent:@"/output.mov"];
+    filePath = [filePath stringByAppendingPathComponent:@"/output.mp4"];
     if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
         [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
     }
     const char *filePathStr = [filePath UTF8String];
     NSLog(@"Path Initialized");
-    videoWriter = VideoWriter(filePathStr, CV_FOURCC('H','2','6','4'), DEFAULT_FPS, image_size, true);
+    videoWriter = VideoWriter(filePathStr, CV_FOURCC('M','P','4','V'), DEFAULT_FPS, image_size, true);
     // videoWriter.open(filePathStr, CV_FOURCC('H','2','6','4'), 30, image_copy.size(), true);
 
     // Also used RPZA, H264, MP4V.
@@ -233,13 +237,25 @@ cv::Size image_size;
     
     NSString *filePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     filePath= [self pathToPatientPhotoFolder];
-    filePath = [filePath stringByAppendingPathComponent:@"/output.mov"];
+    filePath = [filePath stringByAppendingPathComponent:@"/output.mp4"];
+    
+    
+    UIDevice *device = [UIDevice currentDevice];
+    NSString *devType=device.model;
+    
+    UIAlertControllerStyle style=UIAlertControllerStyleActionSheet;
+    if ([devType containsString:@"iPad"]){
+        style=UIAlertControllerStyleAlert;
+    }else{
+        
+    }
+    
     
     //Alert window
     UIAlertController * choiceVC=   [UIAlertController
                                   alertControllerWithTitle:@"녹화가 완료 되었습니다."
                                   message:@"어떤 작업을 할지 선택해 주세요"
-                                  preferredStyle:UIAlertControllerStyleActionSheet];
+                                  preferredStyle:style];
     
     UIAlertAction* actionSaveVideo = [UIAlertAction
                          actionWithTitle:@"저장하기"
@@ -281,9 +297,13 @@ cv::Size image_size;
         NSLog(@"Not Compatible");
     }
     
-    UIAlertController *alert=[UtilFunctions getSimpleAlertVC:@"Video Saved" msg:@"Video Saved in Photo-gallery" okMsg:@"OK"];
+    UIAlertController *alert=[UtilFunctions getSimpleAlertVC:@"Video Saved" msg:@"Video Saved in Photo-gallery"];
     
     [self presentViewController:alert animated:YES completion:nil];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [alert dismissViewControllerAnimated:YES completion:nil];
+    });
+
     
 }
 
@@ -318,7 +338,7 @@ cv::Size image_size;
     UIActivityViewController *activityVC = [[UIActivityViewController alloc]
                                             initWithActivityItems:postItems
                                             applicationActivities:nil];
-    
+    activityVC.popoverPresentationController.sourceView=self.view;
     activityVC.excludedActivityTypes = @[];
     
     [self presentViewController:activityVC animated:YES completion:nil];

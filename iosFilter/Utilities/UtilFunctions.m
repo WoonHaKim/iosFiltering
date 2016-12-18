@@ -34,4 +34,15 @@
 
 }
 
++(UIAlertController *)getSimpleAlertVC:(NSString *)msgTitle msg:(NSString *)msg {
+    //Alert window
+    UIAlertController * alert=   [UIAlertController
+                                  alertControllerWithTitle:msgTitle
+                                  message:msg
+                                  preferredStyle:UIAlertControllerStyleAlert];
+
+    return alert;
+    
+}
+
 @end

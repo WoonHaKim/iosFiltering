@@ -13,4 +13,7 @@
 
 
 +(UIAlertController *)getSimpleAlertVC:(NSString *)msgTitle msg:(NSString *)msg okMsg:(NSString *)okMsg;
++(UIAlertController *)getSimpleAlertVC:(NSString *)msgTitle msg:(NSString *)msg;
+
+
 @end

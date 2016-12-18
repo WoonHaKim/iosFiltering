@@ -100,6 +100,11 @@
                             <constraint firstItem="Trt-fH-gfj" firstAttribute="top" secondItem="ogY-ya-yst" secondAttribute="bottom" constant="9" id="zKq-27-a5K"/>
                             <constraint firstAttribute="trailingMargin" secondItem="BfW-KB-Ewp" secondAttribute="trailing" id="zm1-dV-UtZ"/>
                         </constraints>
+                        <variation key="heightClass=regular-widthClass=regular">
+                            <mask key="constraints">
+                                <include reference="fbj-BA-H86"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
                         <outlet property="cameraView" destination="l7O-mr-520" id="8NI-9g-XiA"/>
