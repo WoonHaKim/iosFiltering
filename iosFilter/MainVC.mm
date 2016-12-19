@@ -17,7 +17,9 @@
 
 cv::Size image_size;
 cv::Mat image_temp;
-
+cv::Mat image_read;
+std::deque<cv::Mat> play_buffer;
+dispatch_queue_t queue;
 
 @interface MainVC ()
 
@@ -41,8 +43,6 @@ cv::Mat image_temp;
 
 -(void)initCamera:(NSInteger)cameraPosition{
     self.camera = [[CvVideoCamera alloc] initWithParentView:cameraView];
-    
-    
     self.camera.delegate = self;
     
     if (cameraPosition==CAMERA_POSITION_FRONT){
@@ -58,18 +58,21 @@ cv::Mat image_temp;
         self.camera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionFront;
 
     }
-    self.camera.defaultAVCaptureSessionPreset = AVCaptureSessionPresetPhoto; //사이즈 설정
+    self.camera.defaultAVCaptureSessionPreset = AVCaptureSessionPresetHigh; //사이즈 설정
     
     self.camera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortrait; //방향 설정
 
     self.camera.rotateVideo = YES;
     self.camera.defaultFPS=DEFAULT_FPS; // 프레임률
     [self.camera start];
-    
 
 }
 #pragma mark - view cycle
 - (void)viewDidLoad {
+    
+    queue = dispatch_queue_create("com.uhkim.iosFilter", NULL);
+ 
+    
     videoCamera.recordVideo = YES;
     self.started =NO;
     self.infoText1.text=@"";
@@ -77,7 +80,7 @@ cv::Mat image_temp;
     self.filterEdit=NO;
     self.filterNo=0;
     
-    
+    image_temp=Mat();
     
     [self initRecBtn];
     
@@ -91,8 +94,8 @@ cv::Mat image_temp;
     filterList = [[NSArray alloc] initWithObjects:@"없음",@"흑백",@"흐림",@"윤곽선",nil];
     self.filterPickerView.delegate=self;
 
-    
-    
+    play_buffer=std::deque<cv::Mat>();
+    play_buffer.clear();
 
     
     [super viewDidLoad];
@@ -102,12 +105,16 @@ cv::Mat image_temp;
 - (void)viewWillAppear:(BOOL)animated{
     //화면 필터용 Observer 등록
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setFilter:) name:@"filterObserver" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setFilter:) name:@"saveFinishObserver" object:nil];
+
     
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
     //사용 하지 않는 Observer 제거
     [[NSNotificationCenter defaultCenter] removeObserver:self  name:@"filterObserver" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"saveFinishObserver" object:nil];
+
 
 }
 
@@ -121,23 +128,22 @@ cv::Mat image_temp;
     }
 
     filterConf=self.slider1.value;
+
     [VideoFilterFunctions filterProcess:image filterNo:self.filterNo conf:filterConf];
 
-    
-    
     dispatch_async(dispatch_get_main_queue(), ^{
 
-        if (self.started==YES && videoWriter.isOpened()) {
+        if (self.started==YES) {
+
             cv::cvtColor(image, image_temp, CV_BGRA2RGBA);
-            try {
-                videoWriter.write(image_temp);
-            } catch (Exception) {
-                NSLog(@"Error Occured When Saving Frame");
-            }
+          //  play_buffer.push_back(image_temp);
+          //  videoWriter.write(image_temp);
+
         }
     });
-
     
+
+
     
 }
 
@@ -148,12 +154,17 @@ cv::Mat image_temp;
 #pragma mark - Button Tapped
 
 - (IBAction)recBtnTapped:(id)sender {
-    dispatch_async(dispatch_get_main_queue(), ^{
         if ( self.started ==NO){
             [self startRecVideo];
         }else{
+            [self stopFrameGetTimer];
+            [self.camera stop];
+            //[self flushVector];
             [self stopRecVideo];
+
         }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        
     [self initRecBtn];
     });
 
@@ -216,20 +227,34 @@ cv::Mat image_temp;
     }
     const char *filePathStr = [filePath UTF8String];
     NSLog(@"Path Initialized");
-    videoWriter = VideoWriter(filePathStr, CV_FOURCC('F','F','V','1'), DEFAULT_FPS, image_size, true);
+    videoWriter = VideoWriter(filePathStr, CV_FOURCC('H','2','6','4'), DEFAULT_FPS, image_size, true);
     // videoWriter.open(filePathStr, CV_FOURCC('H','2','6','4'), 30, image_copy.size(), true);
 
+    play_buffer.clear();
     [self initTimer];
     // Also used RPZA, H264, MP4V.
     self.started = YES;
     NSLog(@"Video Capture Started");
+    [self initFrameGetTimer];
+}
 
+
+-(void)flushVector{
+    NSLog(@"Vector Size:%ld",play_buffer.size());
+    if(videoWriter.isOpened()){
+        for(int i=0;i<play_buffer.size();i++){
+            
+            videoWriter.write(play_buffer[i]);
+            
+        }
+    }
 }
 
 -(void)stopRecVideo{
     self.started = NO;
 
     videoWriter.release();
+
 
     NSString *filePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
     filePath= [self pathToPatientPhotoFolder];
@@ -286,7 +311,7 @@ cv::Mat image_temp;
     [choiceVC addAction:actionCancelVideo];
 
     [self presentViewController:choiceVC animated:YES completion:nil];
-    
+    [self initCamera:self.cameraSelect.selectedSegmentIndex];
     
 
 
@@ -435,6 +460,29 @@ cv::Mat image_temp;
     self.recMin=0;
     
     [self updateTimer];
+}
+
+
+-(void)initFrameGetTimer{
+    self.frameTimer= [NSTimer scheduledTimerWithTimeInterval:1/DEFAULT_FPS target:self selector:@selector(getFrameCapture) userInfo:[[NSDictionary alloc]initWithObjects:@[@"timerID"] forKeys:@[@"t00002"]] repeats:YES];
+    NSRunLoop *theRunLoop = [NSRunLoop currentRunLoop];
+    [theRunLoop addTimer:self.countTimer forMode:NSDefaultRunLoopMode];
+}
+
+-(void)getFrameCapture{
+    dispatch_async(dispatch_get_main_queue(), ^{
+
+        image_read=image_temp.clone();
+        if(videoWriter.isOpened()){
+            videoWriter.write(image_read);
+        }
+    });
+
+}
+
+-(void)stopFrameGetTimer{
+    [self.frameTimer invalidate];
+
 }
 
 #pragma mark - 전후면 카메라 선택

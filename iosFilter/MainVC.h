@@ -24,6 +24,7 @@ using namespace cv;
     IBOutlet UIImageView *cameraView;
     CvVideoCamera* videoCamera;
     
+    cv::VideoCapture videoCapture;
     cv::VideoWriter videoWriter;
     float filterConf;
     NSArray* filterList;
@@ -34,6 +35,8 @@ using namespace cv;
 
 
 @property (strong, nonatomic) NSTimer *countTimer;
+@property (strong, nonatomic) NSTimer *frameTimer;
+
 
 @property (weak, nonatomic) IBOutlet UIButton *settingsBtn;
 

@@ -9,7 +9,7 @@
 #ifndef Constants_h
 #define Constants_h
 
-#define DEFAULT_FPS 30
+#define DEFAULT_FPS 20
 
 #define FILTER_NONE 900
 #define FILTER_MONOCHROME 901
@@ -23,8 +23,8 @@
 #define FILTER_CANNY_DSIZE_MAX 500
 
 
-#define CAMERA_POSITION_BACK 910
-#define CAMERA_POSITION_FRONT 911
+#define CAMERA_POSITION_BACK 0
+#define CAMERA_POSITION_FRONT 1
 
 
 #endif /* Constants_h */
