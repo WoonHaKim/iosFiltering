@@ -39,8 +39,27 @@
     cvtColor(input, image_copy2, CV_BGRA2GRAY);
 
     Canny(image_copy2,image_copy,dSize,FILTER_CANNY_DSIZE_MAX); //외곽선 따기
-    //bitwise_not(image_copy, image_copy);
+    bitwise_not(image_copy, image_copy);
     cvtColor(image_copy, input, CV_GRAY2BGRA);
+}
+
++(void)filterthr:(Mat &)input conf:(float)filterConf{
+    Mat image_copy,image_copy2;
+    cvtColor(input, image_copy, CV_BGRA2GRAY );
+    threshold( image_copy, image_copy2, floor(filterConf*FILTER_THRESHOLD_MAX), FILTER_THRESHOLD_MAX,CV_THRESH_BINARY );
+   // bitwise_not(image_copy2 , image_copy2);
+    cvtColor(image_copy2, input, CV_GRAY2BGRA);
+
+
+}
+
++(void)filterErode:(Mat &)input conf:(float)filterConf{
+    Mat image_copy;
+    int erosion_value=floor(filterConf*FILTER_EROSION_MAX);
+    Mat kernel_element = Mat(erosion_value, erosion_value, CV_8U, cv::Scalar(1));
+    erode(input, input, kernel_element);
+
+    
 }
 
 
@@ -56,6 +75,12 @@
             [VideoFilterFunctions filterblur:input conf:filterConf];
             break;
         case 3:
+            [VideoFilterFunctions filterthr:input conf:filterConf];
+            break;
+        case 4:
+            [VideoFilterFunctions filterErode:input conf:filterConf];
+            break;
+        case 5:
             [VideoFilterFunctions filterCanny:input conf:filterConf];
             break;
         default:

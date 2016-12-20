@@ -19,9 +19,6 @@ using namespace cv;
 
 @interface VideoFilterFunctions : NSObject
 
-+(void)filterMonoChrome:(Mat &)input conf:(float)filterConf;
-+(void)filterblur:(Mat &)input conf:(float)filterConf;
-+(void)filterCanny:(Mat &)input conf:(float)filterConf;
 
 
 +(void)filterProcess:(Mat &)input filterNo:(NSInteger)filterNo conf:(float)filterConf;

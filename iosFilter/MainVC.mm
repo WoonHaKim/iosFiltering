@@ -91,7 +91,7 @@ dispatch_queue_t queue;
     
 
     self.filterPickerView.hidden=YES;
-    filterList = [[NSArray alloc] initWithObjects:@"없음",@"흑백",@"흐림",@"윤곽선",nil];
+    filterList = [[NSArray alloc] initWithObjects:@"없음",@"흑백",@"흐림",@"경계",@"단순화",@"윤곽선",nil];
     self.filterPickerView.delegate=self;
 
     play_buffer=std::deque<cv::Mat>();
@@ -400,7 +400,7 @@ dispatch_queue_t queue;
 
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component{
     self.filterNo=row;
-    self.slider1.value=0;
+    self.slider1.value=0.5;
     self.slider2.value=0;
 }
 
