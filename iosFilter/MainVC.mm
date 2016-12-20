@@ -464,15 +464,17 @@ dispatch_queue_t queue;
 
 
 -(void)initFrameGetTimer{
-    self.frameTimer= [NSTimer scheduledTimerWithTimeInterval:1/DEFAULT_FPS target:self selector:@selector(getFrameCapture) userInfo:[[NSDictionary alloc]initWithObjects:@[@"timerID"] forKeys:@[@"t00002"]] repeats:YES];
+    float timeInterval=(float)1/(float)DEFAULT_FPS;
+    self.frameTimer= [NSTimer scheduledTimerWithTimeInterval:timeInterval target:self selector:@selector(getFrameCapture) userInfo:[[NSDictionary alloc]initWithObjects:@[@"timerID"] forKeys:@[@"t00002"]] repeats:YES];
     NSRunLoop *theRunLoop = [NSRunLoop currentRunLoop];
     [theRunLoop addTimer:self.countTimer forMode:NSDefaultRunLoopMode];
 }
 
 -(void)getFrameCapture{
-    dispatch_async(dispatch_get_main_queue(), ^{
 
         image_read=image_temp.clone();
+    dispatch_async(dispatch_get_main_queue(), ^{
+
         if(videoWriter.isOpened()){
             videoWriter.write(image_read);
         }

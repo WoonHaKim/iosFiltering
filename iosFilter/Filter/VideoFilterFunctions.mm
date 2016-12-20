@@ -10,14 +10,14 @@
 
 @implementation VideoFilterFunctions
 
-+(void)filterMonoChrome:(Mat &)input conf:(float)filterConf{
+void filterMonoChrome(Mat & input ,float filterConf){
     Mat image_copy;
     cvtColor(input, image_copy, CV_BGRA2GRAY); //흑백 1채널로 변환
     cvtColor(image_copy, input, CV_GRAY2BGRA);
 
 }
 
-+(void)filterblur:(Mat &)input conf:(float)filterConf{
+void filterblur(Mat & input, float filterConf){
     Mat image_copy;
     int dSize=FILTER_BLUR_DSIZE_MAX;
     dSize=floor(filterConf*(float)FILTER_BLUR_DSIZE_MAX)+1;
@@ -28,7 +28,7 @@
     
 }
 
-+(void)filterCanny:(Mat &)input conf:(float)filterConf{
+void filterCanny(Mat & input ,float filterConf){
     Mat image_copy,image_copy2;
 
     int dSize=FILTER_CANNY_DSIZE_MIN;
@@ -43,7 +43,7 @@
     cvtColor(image_copy, input, CV_GRAY2BGRA);
 }
 
-+(void)filterthr:(Mat &)input conf:(float)filterConf{
+void filterthr( Mat & input ,float filterConf){
     Mat image_copy,image_copy2;
     cvtColor(input, image_copy, CV_BGRA2GRAY );
     threshold( image_copy, image_copy2, floor(filterConf*FILTER_THRESHOLD_MAX), FILTER_THRESHOLD_MAX,CV_THRESH_BINARY );
@@ -53,7 +53,7 @@
 
 }
 
-+(void)filterErode:(Mat &)input conf:(float)filterConf{
+void filterErode(Mat & input, float filterConf){
     Mat image_copy;
     int erosion_value=floor(filterConf*FILTER_EROSION_MAX);
     Mat kernel_element = Mat(erosion_value, erosion_value, CV_8U, cv::Scalar(1));
@@ -69,19 +69,19 @@
             break;
         case 1:
             
-            [VideoFilterFunctions filterMonoChrome:input conf:filterConf];
+            filterMonoChrome(input ,filterConf);
             break;
         case 2:
-            [VideoFilterFunctions filterblur:input conf:filterConf];
+            filterblur(input ,filterConf);
             break;
         case 3:
-            [VideoFilterFunctions filterthr:input conf:filterConf];
+            filterthr(input ,filterConf);
             break;
         case 4:
-            [VideoFilterFunctions filterErode:input conf:filterConf];
+            filterErode(input ,filterConf);
             break;
         case 5:
-            [VideoFilterFunctions filterCanny:input conf:filterConf];
+            filterCanny(input ,filterConf);
             break;
         default:
             break;
