@@ -44,7 +44,12 @@ dispatch_queue_t queue;
 -(void)initCamera:(NSInteger)cameraPosition{
     self.camera = [[CvVideoCamera alloc] initWithParentView:cameraView];
     self.camera.delegate = self;
-    
+
+    [cameraView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-140) ];
+
+    NSLog(@"%f",cameraView.frame.size.height);
+
+    [cameraView setContentMode:UIViewContentModeScaleToFill];
     if (cameraPosition==CAMERA_POSITION_FRONT){
         self.camera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionFront;
 
@@ -58,7 +63,7 @@ dispatch_queue_t queue;
         self.camera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionFront;
 
     }
-    self.camera.defaultAVCaptureSessionPreset = AVCaptureSessionPresetHigh; //사이즈 설정
+    self.camera.defaultAVCaptureSessionPreset = AVCaptureSessionPresetMedium; //사이즈 설정
     
     self.camera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortrait; //방향 설정
 
