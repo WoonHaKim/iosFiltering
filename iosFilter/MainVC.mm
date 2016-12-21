@@ -45,7 +45,7 @@ dispatch_queue_t queue;
     self.camera = [[CvVideoCamera alloc] initWithParentView:cameraView];
     self.camera.delegate = self;
 
-    [cameraView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-140) ];
+    [cameraView setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-150) ];
 
     NSLog(@"%f",cameraView.frame.size.height);
 
