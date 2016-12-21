@@ -193,14 +193,17 @@ dispatch_queue_t queue;
             self.filterEdit=YES;
             self.filterPickerView.hidden=YES;
             btnTitle=@"OK";
-            
+            [self.settingsBtn setImage:[UIImage imageNamed:@"filter_normal"] forState:UIControlStateNormal];
+
 
         }else{
             self.filterEdit=NO;
             self.filterPickerView.hidden=NO;
 
             btnTitle=@"Filter";
-            
+            [self.settingsBtn setImage:[UIImage imageNamed:@"filter_selected"] forState:UIControlStateNormal];
+
+
         }
         if (self.filterNo==0 || self.filterNo==1){
 
