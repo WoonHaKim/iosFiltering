@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import <stdlib.h>
-#import "VideoFilterConf.h"
 #import "VideoFilterFunctions.h"
 
 
