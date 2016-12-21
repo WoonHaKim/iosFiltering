@@ -28,7 +28,6 @@
 		181EA5791E02C9CE00FC2026 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 181EA5781E02C9CE00FC2026 /* Foundation.framework */; };
 		181EA57B1E02C9D900FC2026 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 181EA57A1E02C9D900FC2026 /* AssetsLibrary.framework */; };
 		181EA5851E0511E200FC2026 /* UtilFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 181EA5841E0511E200FC2026 /* UtilFunctions.m */; };
-		181EA5881E05151300FC2026 /* VideoFilterConf.m in Sources */ = {isa = PBXBuildFile; fileRef = 181EA5871E05151300FC2026 /* VideoFilterConf.m */; };
 		181EA58C1E0523B100FC2026 /* VideoFilterFunctions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 181EA58B1E0523B100FC2026 /* VideoFilterFunctions.mm */; };
 		1B5576C61E03CB31006A7C82 /* stop_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 1B5576C21E03CB31006A7C82 /* stop_pressed.png */; };
 		1B5576C71E03CB31006A7C82 /* stop_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 1B5576C31E03CB31006A7C82 /* stop_normal.png */; };
@@ -88,8 +87,6 @@
 		181EA5821E05083A00FC2026 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		181EA5831E0511E200FC2026 /* UtilFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UtilFunctions.h; path = Utilities/UtilFunctions.h; sourceTree = "<group>"; };
 		181EA5841E0511E200FC2026 /* UtilFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UtilFunctions.m; path = Utilities/UtilFunctions.m; sourceTree = "<group>"; };
-		181EA5861E05151300FC2026 /* VideoFilterConf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VideoFilterConf.h; path = Filter/VideoFilterConf.h; sourceTree = "<group>"; };
-		181EA5871E05151300FC2026 /* VideoFilterConf.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VideoFilterConf.m; path = Filter/VideoFilterConf.m; sourceTree = "<group>"; };
 		181EA58A1E0523B100FC2026 /* VideoFilterFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VideoFilterFunctions.h; path = Filter/VideoFilterFunctions.h; sourceTree = "<group>"; };
 		181EA58B1E0523B100FC2026 /* VideoFilterFunctions.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = VideoFilterFunctions.mm; path = Filter/VideoFilterFunctions.mm; sourceTree = "<group>"; };
 		1B5576C21E03CB31006A7C82 /* stop_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stop_pressed.png; sourceTree = "<group>"; };
@@ -246,8 +243,6 @@
 		181EA5891E05151A00FC2026 /* Filter */ = {
 			isa = PBXGroup;
 			children = (
-				181EA5861E05151300FC2026 /* VideoFilterConf.h */,
-				181EA5871E05151300FC2026 /* VideoFilterConf.m */,
 				181EA58A1E0523B100FC2026 /* VideoFilterFunctions.h */,
 				181EA58B1E0523B100FC2026 /* VideoFilterFunctions.mm */,
 			);
@@ -412,7 +407,6 @@
 				181EA50D1E02BB8200FC2026 /* MainVC.mm in Sources */,
 				181EA50A1E02BB8000FC2026 /* AppDelegate.m in Sources */,
 				181EA5071E02BB7E00FC2026 /* main.m in Sources */,
-				181EA5881E05151300FC2026 /* VideoFilterConf.m in Sources */,
 				1B8F25AE1E03C11100B3C206 /* ShareVC.m in Sources */,
 				181EA5131E02BB8700FC2026 /* iosFilter.xcdatamodeld in Sources */,
 				181EA5851E0511E200FC2026 /* UtilFunctions.m in Sources */,

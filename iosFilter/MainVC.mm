@@ -108,18 +108,10 @@ dispatch_queue_t queue;
     
 }
 - (void)viewWillAppear:(BOOL)animated{
-    //화면 필터용 Observer 등록
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setFilter:) name:@"filterObserver" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setFilter:) name:@"saveFinishObserver" object:nil];
 
-    
 }
 
 - (void)viewWillDisappear:(BOOL)animated{
-    //사용 하지 않는 Observer 제거
-    [[NSNotificationCenter defaultCenter] removeObserver:self  name:@"filterObserver" object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"saveFinishObserver" object:nil];
-
 
 }
 
@@ -470,7 +462,7 @@ dispatch_queue_t queue;
     [self updateTimer];
 }
 
-
+#pragma mark - 프레임 저장
 -(void)initFrameGetTimer{
     float timeInterval=(float)1/(float)DEFAULT_FPS;
     self.frameTimer= [NSTimer scheduledTimerWithTimeInterval:timeInterval target:self selector:@selector(getFrameCapture) userInfo:[[NSDictionary alloc]initWithObjects:@[@"timerID"] forKeys:@[@"t00002"]] repeats:YES];
